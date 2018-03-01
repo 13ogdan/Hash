@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SelfDrivingRides
 {
-    class Program
+    public class Program
     {
         public class Ride
         {
@@ -66,7 +66,7 @@ namespace SelfDrivingRides
         public class Vehicle
         {
             public int N { get; set; }
-            public List<Ride> Rides { get; set; } = new List<Ride>();
+            public List<TakenRide> Rides { get; set; } = new List<TakenRide>();
             public long Score { get; set; }
             public int CurRow { get; set; }
             public int CurCol { get; set; }
@@ -111,7 +111,7 @@ namespace SelfDrivingRides
 
             foreach (var v in res)
             {
-                var rides = string.Join(" ", v.Rides.Select(r => r.N.ToString()));
+                var rides = string.Join(" ", v.Rides.Select(r => r.Ride.N.ToString()));
                 File.AppendAllText(filename, string.Format($"{v.Rides.Count} {rides}\n"));
             }
         }
@@ -132,9 +132,115 @@ namespace SelfDrivingRides
                 });
             }
 
-
+            var algo = new AvidRides(problem, res);
 
             WriteOutput(res, "output.out");
         }
+    }
+
+    public class AvidRides
+    {
+        private readonly Program.Problem _problem;
+        private readonly List<Program.Ride> _rides;
+        private Program.Vehicle[] _vehicles;
+
+        public AvidRides(Program.Problem problem, List<Program.Vehicle> vehicles)
+        {
+            _problem = problem;
+            _rides = problem.Rides.OrderBy(ride => ride.StartT).ToList();
+            _vehicles = vehicles.ToArray();
+
+            foreach (var vehicle in _vehicles)
+            {
+                var first = _rides.Select(ride => IfTake(null, ride)).FirstOrDefault(ride => ride.Score > 0);
+                if (first == null)
+                    break;
+                TakeRide(first, vehicle, _rides);
+            }
+        }
+
+        private void TakeRide(TakenRide ride, Program.Vehicle vehicle, List<Program.Ride> rides)
+        {
+            vehicle.Rides.Add(ride);
+            rides.Remove(ride.Ride);
+            TakenRide bestResult = null;
+            foreach (var possibleRide in rides)
+            {
+                var result = IfTake(vehicle.Rides.Last(), possibleRide);
+                var canRide = result.Score > 0;
+                if (!canRide)
+                    continue;
+                if (bestResult == null)
+                    bestResult = result;
+                if (result.Score > bestResult.Score)
+                {
+                    bestResult = result;
+                }
+            }
+
+            if (bestResult != null)
+                TakeRide(bestResult, vehicle, rides);
+        }
+
+        private TakenRide IfTake(TakenRide lastRide, Program.Ride ride)
+        {
+            int possibleStart = 0;
+            if (lastRide != null)
+            {
+                var lastRideRide = lastRide.Ride;
+                var dist = Dist(lastRideRide, ride);
+                possibleStart = lastRide.EndIteration + dist;
+            }
+            else
+            {
+                possibleStart = 0 + ride.DistToStart(0, 0);
+            }
+
+            var posEnd = possibleStart + ride.Length();
+            var endIteration = GetEndIteration(ride, posEnd, possibleStart);
+            return new TakenRide(ride, endIteration, possibleStart <= ride.StartT, _problem.Bonus);
+        }
+
+        private static int GetEndIteration(Program.Ride ride, int posEnd, int possibleStart)
+        {
+            if (posEnd <= ride.FinishT)
+            {
+                if (possibleStart <= ride.StartT)
+                    return ride.StartT + ride.Length();
+                else
+                {
+                    var delay = possibleStart - ride.StartT;
+                    return ride.StartT + ride.Length() + delay;
+                }
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        private int Dist(Program.Ride from, Program.Ride to)
+        {
+            return Math.Abs(from.FinishCol - to.StartCol) + Math.Abs(from.FinishRow - to.StartRow);
+        }
+    }
+
+    public class TakenRide
+    {
+        public Program.Ride Ride { get; }
+        public int EndIteration { get; }
+
+        public TakenRide(Program.Ride ride, int endIteration, bool hasOffset, int bonus)
+        {
+            Ride = ride;
+            EndIteration = endIteration;
+            Score = 0;
+            if (EndIteration >= 0)
+            {
+                Score = ride.Length() + (hasOffset ? 0 : bonus);
+            }
+        }
+
+        public int Score { get; }
     }
 }

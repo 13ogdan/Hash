@@ -7,3 +7,5 @@
 
 *.exe
 *.pdb
+/GoogleHash/Pizza/bin/Debug/Pizza.exe.config
+/GoogleHash/SelfDrivingRides/bin/Debug
