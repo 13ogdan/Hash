@@ -91,6 +91,9 @@ namespace SelfDrivingRides
 
         private static void WriteOutput(List<Vehicle> res, string filename)
         {
+            if (File.Exists(filename))
+                File.Delete(filename);
+
             foreach (var v in res)
             {
                 var rides = string.Join(" ", v.Rides.Select(r => r.N.ToString()));
