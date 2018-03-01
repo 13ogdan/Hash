@@ -11,12 +11,18 @@ namespace SelfDrivingRides
     {
         public class Ride
         {
+            public int N { get; set; }
             public int StartRow { get; set; }
             public int StartCol { get; set; }
             public int FinishRow { get; set; }
             public int FinishCol { get; set; }
             public int StartT { get; set; }
             public int FinishT { get; set; }
+
+            public int Length()
+            {
+                return Math.Abs(FinishRow - StartRow) + Math.Abs(FinishCol - StartCol);
+            }
         }
 
         public class Problem
@@ -29,10 +35,17 @@ namespace SelfDrivingRides
 
             public List<Ride> Rides { get; set; } = new List<Ride>();
         }
+        
+        public class Vehicle
+        {
+            public int N { get; set; }
+            public List<Ride> Rides { get; set; } = new List<Ride>();
+            public long Score { get; set; }
+        }
+
 
         private static Problem ReadInput(string filename)
-        {
-            
+        {            
             var lines = File.ReadAllLines(filename);
             var head = lines[0].Split(' ');
             var res = new Problem()
@@ -49,6 +62,7 @@ namespace SelfDrivingRides
             {
                 var l = lines[i].Split(' ');
                 res.Rides.Add(new Ride() {
+                    N = i - 1,
                     StartRow = Convert.ToInt32(l[0]),
                     StartCol = Convert.ToInt32(l[1]),
                     FinishRow = Convert.ToInt32(l[2]),
@@ -61,9 +75,23 @@ namespace SelfDrivingRides
             return res;
         }
 
+        private static void WriteOutput(List<Vehicle> res, string filename)
+        {
+            foreach (var v in res)
+            {
+                var rides = string.Join(" ", v.Rides.Select(r => r.N.ToString()));
+                File.AppendAllText(filename, string.Format($"{v.N} {rides}\n"));
+            }
+        }
+
         static void Main(string[] args)
         {
             var problem = ReadInput(args[0]);
+            var res = new List<Vehicle>();
+
+
+
+            WriteOutput(res, "output.out");
         }
     }
 }
