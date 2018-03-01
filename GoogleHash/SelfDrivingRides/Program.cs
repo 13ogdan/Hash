@@ -19,6 +19,19 @@ namespace SelfDrivingRides
             public int StartT { get; set; }
             public int FinishT { get; set; }
 
+            public int Score(int startTime, int bonus)
+            {
+                var l = Length();
+                var res = 0;
+                if (startTime + l <= FinishT)
+                    res += l;
+
+                if (startTime == StartT)
+                    res += bonus;
+
+                return res;
+            }
+
             public int Length()
             {
                 return Math.Abs(FinishRow - StartRow) + Math.Abs(FinishCol - StartCol);
@@ -55,6 +68,8 @@ namespace SelfDrivingRides
             public int N { get; set; }
             public List<Ride> Rides { get; set; } = new List<Ride>();
             public long Score { get; set; }
+            public int CurRow { get; set; }
+            public int CurCol { get; set; }
         }
 
 
@@ -101,10 +116,21 @@ namespace SelfDrivingRides
             }
         }
 
+
+
         static void Main(string[] args)
         {
             var problem = ReadInput(args[0]);
             var res = new List<Vehicle>();
+            for (int i = 0; i < problem.Fleet; i++)
+            {
+                res.Add(new Vehicle
+                {
+                    CurCol = 0,
+                    CurRow = 0,
+                    N = i
+                });
+            }
 
 
 
