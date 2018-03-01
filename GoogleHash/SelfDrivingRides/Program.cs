@@ -23,6 +23,20 @@ namespace SelfDrivingRides
             {
                 return Math.Abs(FinishRow - StartRow) + Math.Abs(FinishCol - StartCol);
             }
+
+            public int DistToStart(int row, int col)
+            {
+                return Math.Abs(row - StartRow) + Math.Abs(row - StartCol);
+            }
+
+            public static int SortByStartT(Ride r1, Ride r2)
+            {
+                if (r1.StartT < r2.StartT)
+                    return -1;
+                if (r1.StartT > r2.StartT)
+                    return 1;
+                return 0;
+            }
         }
 
         public class Problem
