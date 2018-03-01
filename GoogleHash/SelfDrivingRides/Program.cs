@@ -19,6 +19,13 @@ namespace SelfDrivingRides
             public int StartT { get; set; }
             public int FinishT { get; set; }
 
+            public int StartX { get { return StartRow; } }
+            public int StartY { get { return StartCol; } }
+            public int EndX { get { return FinishRow; } }
+            public int EndY { get { return FinishCol; } }
+            public int MinStartTime { get { return StartT;  } }
+            public int MaxStartTime { get { return FinishT - Length(); } }
+
             public int Score(int startTime, int bonus)
             {
                 var l = Length();
@@ -52,6 +59,39 @@ namespace SelfDrivingRides
             }
         }
 
+        public class CarState
+        {
+            private Ride currRide;
+            private List<Ride> allRides = new List<Ride>();
+            public Ride Ride { get { return currRide; }
+                set 
+                {
+                    allRides.Add(value);
+                    currRide = value;
+                }
+            }
+            public List<Ride> Rides { get { return allRides; } }
+            public int StartTime;
+            public int Score;
+            
+            public CarState ()
+            {
+                currRide = null;
+                StartTime = 0;
+                Score = 0;                
+            }
+
+            public int ArriveTime(int x, int y)
+            {
+                if (currRide == null)
+                {
+                    return x + y;
+                }
+                return StartTime + Ride.Length() + Math.Abs(Ride.EndX - x) + Math.Abs(Ride.EndY - y);
+            }
+        }
+
+
         public class Problem
         {
             public int RowN { get; set; }
@@ -59,8 +99,60 @@ namespace SelfDrivingRides
             public int Fleet { get; set; }
             public int Bonus { get; set; }
             public long T { get; set; }
+            public Random Random = new Random();
 
             public List<Ride> Rides { get; set; } = new List<Ride>();
+
+            private void getNearest(List<CarState> states, Ride ride)
+            {
+                var minStart = 1000000000 + 1;
+                CarState minCar = null;
+
+                var cars = new List<CarState>();
+
+                for (int i = 0; i < states.Count; i++)
+                {
+                    var car = states[i];
+                    var arriveTime = car.ArriveTime(ride.StartX, ride.StartY);
+                    
+                    if (arriveTime <= ride.MinStartTime)
+                    {
+                        cars.Add(car);
+                    }
+
+                    if (arriveTime <= ride.MaxStartTime && arriveTime < minStart)
+                    {
+                        minCar = car;
+                        minStart = arriveTime;
+                    }
+                }
+
+                if (cars.Count > 0)
+                {
+                    var cnt = Random.Next(cars.Count);
+                    Console.WriteLine(cnt + " " + cars.Count);
+                    var car = cars[cnt];
+                    car.Ride = ride;
+                    car.StartTime = ride.MinStartTime;
+                    car.Score = car.Score + Bonus + ride.Length();
+                    return;
+                }
+
+                if (minCar != null)
+                {
+                    minCar.Ride = ride;
+                    minCar.StartTime = minStart;
+                    minCar.Score = minCar.Score + ride.Length();
+                }                
+            }
+
+            public void Solve(List<CarState> states)
+            {
+                for (int i = 0; i < Rides.Count; i++)
+                {
+                    getNearest(states, Rides[i]);
+                }
+            }
         }
         
         public class Vehicle
@@ -104,7 +196,7 @@ namespace SelfDrivingRides
             return res;
         }
 
-        private static void WriteOutput(List<Vehicle> res, string filename)
+        private static void WriteOutput(List<CarState> res, string filename)
         {
             if (File.Exists(filename))
                 File.Delete(filename);
@@ -116,25 +208,24 @@ namespace SelfDrivingRides
             }
         }
 
-
+        static List<string> test_names = new List<string>() { "a_example", "b_should_be_easy", "c_no_hurry", "d_metropolis", "e_high_bonus" };
+        static int test = 1;
 
         static void Main(string[] args)
         {
-            var problem = ReadInput(args[0]);
-            var res = new List<Vehicle>();
+            // var problem = ReadInput(args[0]);
+            var problem = ReadInput(test_names[test] + ".in");
+            var res = new List<CarState>();
             for (int i = 0; i < problem.Fleet; i++)
             {
-                res.Add(new Vehicle
-                {
-                    CurCol = 0,
-                    CurRow = 0,
-                    N = i
-                });
+                res.Add(new CarState());
             }
 
+            problem.Solve(res);
 
+            WriteOutput(res, test_names[test] + ".out");
 
-            WriteOutput(res, "output.out");
+            Console.ReadLine();
         }
     }
 }
