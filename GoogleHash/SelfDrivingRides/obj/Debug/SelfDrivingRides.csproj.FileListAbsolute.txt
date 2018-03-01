@@ -1,0 +1,7 @@
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\bin\Debug\SelfDrivingRides.exe.config
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\bin\Debug\SelfDrivingRides.exe
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\bin\Debug\SelfDrivingRides.pdb
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\obj\Debug\SelfDrivingRides.csprojResolveAssemblyReference.cache
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\obj\Debug\SelfDrivingRides.csproj.CoreCompileInputs.cache
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\obj\Debug\SelfDrivingRides.exe
+D:\Work\GoogleHash2018\GoogleHash\SelfDrivingRides\obj\Debug\SelfDrivingRides.pdb

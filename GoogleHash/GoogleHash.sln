@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizza", "Pizza\Pizza.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashCore", "HashCore\HashCore.csproj", "{53A60699-6057-4A5B-96EC-0F97F2D9A854}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SelfDrivingRides", "SelfDrivingRides\SelfDrivingRides.csproj", "{A1613981-8798-43D7-8255-6F11CB059CEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{53A60699-6057-4A5B-96EC-0F97F2D9A854}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53A60699-6057-4A5B-96EC-0F97F2D9A854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53A60699-6057-4A5B-96EC-0F97F2D9A854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1613981-8798-43D7-8255-6F11CB059CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1613981-8798-43D7-8255-6F11CB059CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1613981-8798-43D7-8255-6F11CB059CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1613981-8798-43D7-8255-6F11CB059CEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

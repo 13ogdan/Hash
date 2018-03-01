@@ -4,3 +4,6 @@
 
 /GoogleHash/Pizza/obj/Debug
 /GoogleHash/.vs/GoogleHash/v15
+
+*.exe
+*.pdb
