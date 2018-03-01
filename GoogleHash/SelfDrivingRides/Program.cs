@@ -97,7 +97,7 @@ namespace SelfDrivingRides
             foreach (var v in res)
             {
                 var rides = string.Join(" ", v.Rides.Select(r => r.N.ToString()));
-                File.AppendAllText(filename, string.Format($"{v.N} {rides}\n"));
+                File.AppendAllText(filename, string.Format($"{v.Rides.Count} {rides}\n"));
             }
         }
 
